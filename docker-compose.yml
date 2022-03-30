@@ -1,0 +1,90 @@
+version: "3.3"
+
+services:
+  traefik:
+    container_name: traefik
+    image: traefik:v2.6
+    ports:
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik/dynamic.yaml:/dynamic.yaml
+      - ./traefik/traefik.yml:/etc/traefik/traefik.yml
+      - ./traefik/ssh/cert.pem:/cert.pem
+      - ./traefik/ssh/privkey.pem:/privkey.pem
+    restart: always
+    networks:
+      linebot_app:
+        ipv4_address: 172.19.0.6
+
+  nginx:
+    container_name: nginx
+    ports:
+      - "8888:80"
+    depends_on:
+      - traefik
+    image: nginx:1.20.1
+    volumes:
+      - ./web:/web
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    restart: always
+    networks:
+      linebot_app:
+        ipv4_address: 172.19.0.5
+#
+  mariadb:
+    container_name: mariadb
+    image: mariadb:10.4.21
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mariadb/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./mariadb/data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+    restart: always
+    networks:
+      linebot_app:
+        ipv4_address: 172.19.0.4
+
+  redisdb:
+    container_name: redisdb
+    image: redis:6.2.5
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis/data:/data
+
+    restart: always
+    networks:
+      linebot_app:
+        ipv4_address: 172.19.0.3
+
+  mongodb:
+    container_name: mongodb
+    image: mongo:5.0.6
+    ports:
+      - "27017:27017"
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: 1234
+    volumes:
+      - ./mongodb/data:/data/db
+    networks:
+      linebot_app:
+        ipv4_address: 172.19.0.7
+
+  web-be:
+    container_name: web-be
+
+
+networks:
+  linebot_app:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.19.0.0/16
+          gateway: 172.19.0.1

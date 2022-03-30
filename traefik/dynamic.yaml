@@ -1,0 +1,19 @@
+tls:
+  certificates:
+    - certFile: /cert.pem
+      keyFile: /privkey.pem
+
+http:
+  services:
+    cluster_develop-cluster:
+      loadBalancer:
+        servers:
+          - url: "http://nginx:80/"
+        passHostHeader: true
+  routers:
+    projectN_develop_intern:
+      service: cluster_develop-cluster
+      entrypoints:
+        - https
+      rule: Host(`web.meowalien.com`)
+      tls: true

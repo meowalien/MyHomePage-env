@@ -1,0 +1,24 @@
+api:
+  insecure: true
+  dashboard: true
+  debug: true
+
+log:
+  level: DEBUG
+
+providers:
+  docker:
+    watch: true
+    exposedbydefault: false
+#    network: outer-gateway
+  file:
+    watch: true
+    filename: /dynamic.yaml
+
+entryPoints:
+  https:
+    address: :443
+    http:
+      tls:
+        domains:
+          - main: meowalien.com
