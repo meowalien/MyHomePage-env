@@ -42,7 +42,8 @@ services:
       - ./mariadb/my.cnf:/etc/mysql/conf.d/my.cnf
       - ./mariadb/data:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: 1234
+      MARIADB_ROOT_PASSWORD: 1234
+      MARIADB_MYSQL_LOCALHOST_USER: 1
     restart: always
     networks:
       linebot_app:
@@ -76,8 +77,8 @@ services:
       linebot_app:
         ipv4_address: 172.19.0.7
 
-  web-be:
-    container_name: web-be
+#  web-be:
+#    container_name: web-be
 
 
 networks:
