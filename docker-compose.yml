@@ -40,7 +40,7 @@ services:
       - "3306:3306"
     volumes:
       - ./mariadb/my.cnf:/etc/mysql/conf.d/my.cnf
-      - ./mariadb/data:/var/lib/mysql
+      - /data/mariadb:/var/lib/mysql
     environment:
       MARIADB_ROOT_PASSWORD: 1234
       MARIADB_MYSQL_LOCALHOST_USER: 1
@@ -55,7 +55,7 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - ./redis/data:/data
+      - /data/redis:/data
 
     restart: always
     networks:
@@ -72,7 +72,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: 1234
     volumes:
-      - ./mongodb/data:/data/db
+      - /data/mongodb:/data/db
     networks:
       linebot_app:
         ipv4_address: 172.19.0.7
