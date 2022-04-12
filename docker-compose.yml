@@ -15,7 +15,7 @@ services:
       - ./traefik/ssh/privkey.pem:/privkey.pem
     restart: always
     networks:
-      linebot_app:
+      homepage_app:
         ipv4_address: 172.19.0.6
 
   nginx:
@@ -30,9 +30,9 @@ services:
       - ./nginx/conf.d:/etc/nginx/conf.d
     restart: always
     networks:
-      linebot_app:
+      homepage_app:
         ipv4_address: 172.19.0.5
-#
+  #
   mariadb:
     container_name: mariadb
     image: mariadb:10.4.21
@@ -46,7 +46,7 @@ services:
       MARIADB_MYSQL_LOCALHOST_USER: 1
     restart: always
     networks:
-      linebot_app:
+      homepage_app:
         ipv4_address: 172.19.0.4
 
   redisdb:
@@ -59,7 +59,7 @@ services:
 
     restart: always
     networks:
-      linebot_app:
+      homepage_app:
         ipv4_address: 172.19.0.3
 
   mongodb:
@@ -74,15 +74,30 @@ services:
     volumes:
       - /data/mongodb:/data/db
     networks:
-      linebot_app:
+      homepage_app:
         ipv4_address: 172.19.0.7
 
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:management
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    environment:
+      RABBITMQ_DEFAULT_USER: root
+      RABBITMQ_DEFAULT_PASS: 1234
+    volumes:
+      - /data/rabbitmq:/var/lib/rabbitmq
+    networks:
+      homepage_app:
+        ipv4_address: 172.19.0.8
 #  web-be:
 #    container_name: web-be
 
 
 networks:
-  linebot_app:
+  homepage_app:
     driver: bridge
     ipam:
       driver: default
