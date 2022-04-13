@@ -80,7 +80,7 @@ services:
 
   rabbitmq:
     container_name: rabbitmq
-    image: rabbitmq:management
+    image: 3.9.14-management
     ports:
       - "15672:15672"
       - "5672:5672"
