@@ -80,7 +80,7 @@ services:
 
   rabbitmq:
     container_name: rabbitmq
-    image: 3.9.14-management
+    image: rabbitmq:3.9.15-management
     ports:
       - "15672:15672"
       - "5672:5672"
@@ -92,6 +92,8 @@ services:
     networks:
       homepage_app:
         ipv4_address: 172.19.0.8
+    restart: always
+
 #  web-be:
 #    container_name: web-be
 
